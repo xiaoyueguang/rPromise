@@ -45,10 +45,20 @@ describe('then: ', function () {
       expect(i).to.be.equal(2)
       expect(err).to.be.equal(ERROR)
       done()
-
     })
     expect(i).to.be.equal(1)
   })
 
+  it('Promise then 方法 返回一个新的 Promise 实例', function (done) {
+    const promise = new Promise(resolve => {
+      setTimeout(() => resolve(1))
+    })
+
+    const then = promise.then(val => {
+      done()
+    })
+    expect(then).to.not.equal(promise)
+    expect(then).to.instanceof(Promise)
+  })
 });
 

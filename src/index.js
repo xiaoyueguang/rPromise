@@ -35,12 +35,19 @@ class rPromise {
   }
 
   then (resolve, reject) {
-    this._resolve = () => {
-      resolve(this._value)
-    }
-    this._reject = () => {
-      reject(this._value)
-    }
+    const promise = new rPromise((_resolve, _reject) => {
+      this._resolve = () => {
+        resolve(this._value)
+        _resolve(promise._value)
+      }
+      this._reject = () => {
+        reject(this._value)
+        _reject(promise._value)
+      }
+    })
+
+    return promise
+
   }
 }
 
