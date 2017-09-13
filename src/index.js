@@ -2,6 +2,7 @@ class rPromise {
   // 状态
   // pending fulfilled rejected
   _status = 'pending'
+  _value
 
   constructor (fn) {
     if (typeof this !== 'object')
@@ -11,23 +12,27 @@ class rPromise {
     if (typeof fn !== 'function')
       throw new Error('Promise 的第一个参数必须为一个方法')
 
-    fn(rPromise.resolve.bind(this), rPromise.reject.bind(this))
+    fn(
+      this.resolve.bind(this),
+      this.reject.bind(this)
+    )
 
   }
 
-  static resolve = function () {
-    return new Promise()
+  resolve = function (value) {
+    this._status = 'resolved'
+    this._value = value
   }
 
-  static resolve = function () {
-
+  reject = function (reason) {
+    this._status = 'rejected'
+    console.error('Uncaught (in promise)', reason)
+    this._value = reason
   }
 
   then (resolve, reject) {
     return new rPromise()
   }
 }
-
-rPromise.deferred = () => {}
 
 module.exports = rPromise
