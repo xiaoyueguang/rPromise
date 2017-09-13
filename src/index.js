@@ -4,6 +4,9 @@ class rPromise {
   _status = 'pending'
   _value
 
+  _resolve () {}
+  _reject () {}
+
   constructor (fn) {
     if (typeof this !== 'object')
       throw new Error('Promise 必须通过实例化来调用')
@@ -16,22 +19,28 @@ class rPromise {
       this.resolve.bind(this),
       this.reject.bind(this)
     )
-
   }
 
   resolve = function (value) {
     this._status = 'resolved'
     this._value = value
+    requestAnimationFrame(this._resolve.bind(this))
   }
 
   reject = function (reason) {
     this._status = 'rejected'
     console.error('Uncaught (in promise)', reason)
     this._value = reason
+    requestAnimationFrame(this._reject.bind(this))
   }
 
   then (resolve, reject) {
-    return new rPromise()
+    this._resolve = () => {
+      resolve(this._value)
+    }
+    this._reject = () => {
+      reject(this._value)
+    }
   }
 }
 

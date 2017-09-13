@@ -63,11 +63,11 @@ describe('实例化: ', function () {
   })
 
   it('实例化后 Promise, 执行 reject, 值会变成传入 reject 的值', function () {
-    const err = new Error('ERROR')
+    const ERROR = new Error('ERROR')
     const promise = new Promise((resolve, reject) => {
-        reject(err)
+        reject(ERROR)
     })
-    expect(promise._value).to.be.equal(err)
+    expect(promise._value).to.be.equal(ERROR)
   })
 });
 

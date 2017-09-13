@@ -7,22 +7,48 @@ describe('then: ', function () {
     expect(promise.then).to.be.a('function')
   })
 
-  // it('Promise then 方法走 resolve', function (done) {
-  //   let i = 0
-  //   const promise = new Promise((resolve) => {
-  //     i++
-  //     setTimeout(() => {
-  //       i++
-  //       resolve(i)
-  //     })
-  //   }).then(function (val) {
-  //     expect(i).to.be.equal(2)
-  //     expect(val).to.be.equal(2)
-  //     done()
-  //   })
+  it('Promise 没有执行 resolve 或 reject 时, then 都不会被触发', function () {
+    let i = 0
+    const promise = new Promise(() => {
+      i++
+    }).then(() => {})
+    expect(i).to.be.equal(1)
+  })
 
-  //   expect(i).to.be.equal(1)
-  // })
+  it('Promise then 方法走 resolve', function (done) {
+    let i = 0
+    const promise = new Promise((resolve) => {
+      i++
+      setTimeout(() => {
+        i++
+        resolve(i)
+      })
+    }).then(function (val) {
+      expect(i).to.be.equal(2)
+      expect(val).to.be.equal(2)
+      done()
+    })
+    expect(i).to.be.equal(1)
+  })
+
+  it('Promise then 方法走 reject', function (done) {
+    let i = 0
+    const ERROR = new Error('ERROR')
+    const promise = new Promise((resolve, reject) => {
+      i++
+      setTimeout(() => {
+        i++
+        reject(ERROR)
+      })
+    }).then(function (val) {
+    }, function (err) {
+      expect(i).to.be.equal(2)
+      expect(err).to.be.equal(ERROR)
+      done()
+
+    })
+    expect(i).to.be.equal(1)
+  })
 
 });
 
