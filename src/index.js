@@ -8,8 +8,6 @@ class rPromise {
   _reject () {}
 
   constructor (fn) {
-    if (typeof this !== 'object')
-      throw new Error('Promise 必须通过实例化来调用')
     if (!fn)
       throw new Error('Promise 必须传入一个参数')
     if (typeof fn !== 'function')
