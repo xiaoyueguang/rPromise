@@ -1,4 +1,4 @@
-import Promise from '../src/index.js'
+import {ERROR, Promise} from './helper'
 import {expect} from 'chai'
 
 describe('实例化: ', function () {
@@ -63,7 +63,7 @@ describe('实例化: ', function () {
   })
 
   it('实例化后 Promise, 执行 reject, 值会变成传入 reject 的值', function () {
-    const ERROR = new Error('ERROR')
+
     const promise = new Promise((resolve, reject) => {
         reject(ERROR)
     })

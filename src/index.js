@@ -2,7 +2,7 @@ class rPromise {
   // 状态
   // pending fulfilled rejected
   _status = 'pending'
-  _value
+  _value = undefined
 
   _resolve () {}
   _reject () {}
@@ -18,35 +18,77 @@ class rPromise {
       this.reject.bind(this)
     )
   }
-
+  // 这里负责状态变更. 以及变更后 触发 then 里的方法
   resolve = function (value) {
     this._status = 'resolved'
     this._value = value
     requestAnimationFrame(this._resolve.bind(this))
   }
 
-  reject = function (reason) {
-    this._status = 'rejected'
-    console.error('Uncaught (in promise)', reason)
-    this._value = reason
-    requestAnimationFrame(this._reject.bind(this))
-  }
+    // 这里负责状态变更. 以及变更后 触发 then 里的方法
+    reject = function (value) {
+      this._status = 'rejected'
+      this._value = value
+      requestAnimationFrame(this._reject.bind(this))
+    }
 
   then (resolve, reject) {
-    const promise = new rPromise((_resolve, _reject) => {
-      this._resolve = () => {
-        resolve(this._value)
-        _resolve(promise._value)
+    const context = this
+    let promise = new rPromise(function (_resolve, _reject) {
+      context._resolve = function () {
+        _promise = resolve(context._value)
+        context._resolve = () => {}
+
+        if (_promise instanceof rPromise) {
+          _promise.then(function (val) {
+            _resolve(val)
+          })
+        } else {
+          // return rPromise.resolve(_promise)
+        }
       }
-      this._reject = () => {
-        reject(this._value)
-        _reject(promise._value)
+
+      context._reject = function () {
+        _promise = reject(context._value)
+        context._reject = () => {}
+
+        if (_promise instanceof rPromise) {
+          _promise.then(() => {}, function (val) {
+            _reject(val)
+          })
+        } else {
+          // return rPromise.resolve(_promise)
+        }
       }
     })
+    switch (this._status) {
+      case 'pending':
+        break
+      case 'resolved':
+        // 马上触发
+        this._resolve()
+        break
+    }
 
     return promise
 
   }
+
+  static resolve = val => {
+    return new rPromise(resolve => resolve(val instanceof rPromise ? undefined : val))
+  }
+
+  static reject = val => {
+    return new rPromise((resolve, reject) => reject(val instanceof rPromise ? undefined : val))
+  }
+
+
+  // reject = function (reason) {
+  //   this._status = 'rejected'
+  //   console.error('Uncaught (in promise)', reason)
+  //   this._value = reason
+  //   requestAnimationFrame(this._reject.bind(this))
+  // }
 }
 
 module.exports = rPromise

@@ -1,4 +1,4 @@
-import Promise from '../src/index.js'
+import {ERROR, Promise} from './helper'
 import {expect} from 'chai'
 
 describe('then: ', function () {
@@ -33,7 +33,6 @@ describe('then: ', function () {
 
   it('Promise then 方法走 reject', function (done) {
     let i = 0
-    const ERROR = new Error('ERROR')
     const promise = new Promise((resolve, reject) => {
       i++
       setTimeout(() => {
@@ -55,10 +54,20 @@ describe('then: ', function () {
     })
 
     const then = promise.then(val => {
+      return new Promise(resolve => {
+        val++
+        setTimeout(() => {
+          resolve(val)
+        })
+      })
+    })
+    then.then(val => {
+      console.log(val)
       done()
     })
-    expect(then).to.not.equal(promise)
-    expect(then).to.instanceof(Promise)
+  })
+
+  it('Promise then 方法里返回一个 Promise 时, 之后的 then 应当遵循那个 Promise', function () {
+
   })
 });
-
