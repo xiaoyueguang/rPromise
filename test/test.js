@@ -12,47 +12,36 @@ function exec (color, str, Promise, done = () => {}) {
   const log = logInit(str, color)
   const print = i => log('次数' + i + '; 时间:' + (getTime() - start) + '   ')
 
-  var promise, promise1, promise2, promise3
+  var promise0, promise1, promise2, promise3
   
-  promise = new Promise(resolve => {
-    // print(0)
+  promise0 = new Promise(resolve => {
+    print(0)
     setTimeout(() => {
-      // print(1)
+      print(1)
       resolve(1)
     }, 100)
   })
-  // promise.z = 0
-  // promise1 = promise.then(val => {
-  //   print(1.5)
-  //   log('值为:' + val)
-  //   promise2 = new Promise(resolve => {
-  //     print(2)
-
-  //     setTimeout(() => {
-  //       print(3)
-  //       print(4)
-  //       resolve(3)
-
-  //     }, 400)
-  //   })
-  //   // promise2.z = 2
-
-  //   return promise2
-  // })
-  // promise1.z = 1
-
-  promise3 = promise.then(val => {
-    log('这里要跑起来: ' + val)
-    return val
+  promise1 = promise0.then(val => {
+    print(2)
+    log(val)
+    return 9
   })
 
-  window.bbbb = promise3
+  // console.log(promise1)
 
-  promise3.then(val => {
-    log('这里也要跑起来: ' + val)
-
+  promise1.then(val => {
+    print(3)
+    log(val)
+    done()
   })
-  // promise3.z = 3
+  .then(val => log(val))
+  .then(val => log(val))
+  .then(val => log(val))
+  .then(val => log(val))
+  .then(val => log(val))
+  .then(val => log(val))
+
+
 
 }
 

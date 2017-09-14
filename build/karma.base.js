@@ -1,3 +1,5 @@
+var single = true
+var testFiles = single ? '../test/test.js' : '../test/**/*.test.js'
 var webpackConfig = {
   module: {
     rules: [
@@ -16,12 +18,10 @@ module.exports = {
   basePath: '',
   frameworks: ['mocha'],
   files: [
-    // '../test/**/*.test.js'
-    '../test/test.js'
+    testFiles
   ],
   preprocessors: {
-    // '../test/**/*.test.js': ['webpack', 'sourcemap']
-    '../test/test.js': ['webpack', 'sourcemap']
+    [testFiles]: ['webpack', 'sourcemap']
   },
   webpack: webpackConfig,
   webpackMiddleware: {
